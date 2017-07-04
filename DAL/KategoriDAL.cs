@@ -53,19 +53,82 @@ namespace DAL
             }
         }
 
+        
         public Kategori GetById(string id)
         {
-            throw new NotImplementedException();
+            using (SqlConnection conn = new SqlConnection(GetConnString()))
+            {
+                Kategori kategori = null;
+                string strSql = @"select * from Kategori 
+                                  where KategoriID=@KategoriID";
+
+                SqlCommand cmd = new SqlCommand(strSql, conn);
+                cmd.Parameters.AddWithValue("@KategoriID", id);
+
+                conn.Open();
+                SqlDataReader dr = cmd.ExecuteReader();
+                if (dr.HasRows)
+                {
+                    while (dr.Read())
+                    {
+                        kategori = new Kategori()
+                        {
+                            KategoriID = Convert.ToInt32(dr["KategoriID"].ToString()),
+                            NamaKategori = dr["NamaKategori"].ToString()
+                        };
+                    }
+                }
+                dr.Close();
+                cmd.Dispose();
+                conn.Close();
+
+                return kategori;
+            }
         }
 
         public int Insert(Kategori obj)
         {
-            throw new NotImplementedException();
+            using (SqlConnection conn = new SqlConnection(GetConnString()))
+            {
+                int result = 0;
+                string strSql = @"insert into Kategori(NamaKategori) 
+                                  values(@NamaKategori);select @@identity";
+                SqlCommand cmd = new SqlCommand(strSql, conn);
+                cmd.Parameters.AddWithValue("@NamaKategori", obj.NamaKategori);
+                try
+                {
+                    conn.Open();
+                    result = Convert.ToInt32(cmd.ExecuteScalar());
+                }
+                catch (SqlException sqlEx)
+                {
+                    throw new Exception("Number:" + sqlEx.Number.ToString() +
+                        " - " + sqlEx.Message);
+                }
+                return result;
+            }
         }
 
         public int Update(Kategori obj)
         {
-            throw new NotImplementedException();
+            using (SqlConnection conn = new SqlConnection(GetConnString()))
+            {
+                string strSql = @"update Kategori set NamaKategori=@NamaKategori 
+                              where KategoriID=@KategoriID";
+                SqlCommand cmd = new SqlCommand(strSql, conn);
+                cmd.Parameters.AddWithValue("@NamaKategori", obj.NamaKategori);
+                cmd.Parameters.AddWithValue("@KategoriID", obj.KategoriID);
+                try
+                {
+                    conn.Open();
+                    int result = cmd.ExecuteNonQuery();
+                    return result;
+                }
+                catch (SqlException sqlEx)
+                {
+                    throw new Exception(sqlEx.Number.ToString() + " " + sqlEx.Message);
+                }
+            }
         }
     }
 }

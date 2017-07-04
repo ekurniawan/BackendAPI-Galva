@@ -12,27 +12,44 @@ namespace BackendAPI.Controllers
 {
     public class KategoriController : ApiController
     {
+        private KategoriBL kategoriBL;
+
+        public KategoriController()
+        {
+            kategoriBL = new KategoriBL();
+        }
+
         // GET: api/Kategori
         public IEnumerable<Kategori> Get()
         {
-            KategoriBL kategoriBL = new KategoriBL();
             return kategoriBL.GetAll();
         }
 
         // GET: api/Kategori/5
-        public string Get(int id)
+        public Kategori Get(string id)
         {
-            return "value";
+            return kategoriBL.GetById(id);
         }
 
         // POST: api/Kategori
-        public void Post([FromBody]string value)
+        
+        public IHttpActionResult Post(Kategori kategori)
         {
+            try
+            {
+                int result = kategoriBL.Insert(kategori);
+                return Ok(result.ToString());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         // PUT: api/Kategori/5
-        public void Put(int id, [FromBody]string value)
+        public void Put(Kategori kategori)
         {
+
         }
 
         // DELETE: api/Kategori/5
