@@ -20,7 +20,54 @@ namespace DAL
 
         public int Delete(Kategori obj)
         {
-            throw new NotImplementedException();
+            using (SqlConnection conn = new SqlConnection(GetConnString()))
+            {
+                string strSql = @"delete from Kategori where KategoriID=@KategoriID";
+                SqlCommand cmd = new SqlCommand(strSql, conn);
+                cmd.Parameters.AddWithValue("@KategoriID", obj.KategoriID);
+
+                try
+                {
+                    conn.Open();
+                    int result = cmd.ExecuteNonQuery();
+                    return result;
+                }
+                catch (SqlException sqlEx)
+                {
+                    throw new Exception(sqlEx.Number.ToString() + " " + sqlEx.Message);
+                }
+                finally
+                {
+                    cmd.Dispose();
+                    conn.Close();
+                }
+            }
+        }
+
+        public int Delete(string id)
+        {
+            using (SqlConnection conn = new SqlConnection(GetConnString()))
+            {
+                string strSql = @"delete from Kategori where KategoriID=@KategoriID";
+                SqlCommand cmd = new SqlCommand(strSql, conn);
+                cmd.Parameters.AddWithValue("@KategoriID", id);
+
+                try
+                {
+                    conn.Open();
+                    int result = cmd.ExecuteNonQuery();
+                    return result;
+                }
+                catch (SqlException sqlEx)
+                {
+                    throw new Exception(sqlEx.Number.ToString() + " " + sqlEx.Message);
+                }
+                finally
+                {
+                    cmd.Dispose();
+                    conn.Close();
+                }
+            }
         }
 
         public IEnumerable<Kategori> GetAll()
@@ -99,15 +146,21 @@ namespace DAL
                 {
                     conn.Open();
                     result = Convert.ToInt32(cmd.ExecuteScalar());
+                    return result;
                 }
                 catch (SqlException sqlEx)
                 {
                     throw new Exception("Number:" + sqlEx.Number.ToString() +
                         " - " + sqlEx.Message);
                 }
-                return result;
+                finally
+                {
+                    cmd.Dispose();
+                    conn.Close();
+                }
             }
         }
+
 
         public int Update(Kategori obj)
         {
@@ -127,6 +180,11 @@ namespace DAL
                 catch (SqlException sqlEx)
                 {
                     throw new Exception(sqlEx.Number.ToString() + " " + sqlEx.Message);
+                }
+                finally
+                {
+                    cmd.Dispose();
+                    conn.Close();
                 }
             }
         }

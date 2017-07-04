@@ -47,14 +47,74 @@ namespace BackendAPI.Controllers
         }
 
         // PUT: api/Kategori/5
-        public void Put(Kategori kategori)
+        public IHttpActionResult Put(Kategori kategori)
         {
+            try
+            {
+                int result = kategoriBL.Update(kategori);
+                return Ok(result.ToString());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
+        [Route("api/Kategori/UpdateMany")]
+        [HttpPut]
+        public IHttpActionResult UpdateMany(List<Kategori> listKategori)
+        {
+            try
+            {
+                kategoriBL.UpdateMany(listKategori);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         // DELETE: api/Kategori/5
-        public void Delete(int id)
+        public IHttpActionResult Delete(Kategori kategori)
         {
+            try
+            {
+                int result = kategoriBL.Delete(kategori);
+                return Ok(result.ToString());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        public IHttpActionResult Delete(string id)
+        {
+            try
+            {
+                int result = kategoriBL.Delete(id);
+                return Ok(result.ToString());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Route("api/Kategori/DeleteMany")]
+        [HttpDelete]
+        public IHttpActionResult DeleteMany(List<string> ids)
+        {
+            try
+            {
+                kategoriBL.DeleteMany(ids);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
