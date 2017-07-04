@@ -19,23 +19,23 @@ namespace BL
             kategoriDAL = new KategoriDAL();
         }
 
-        public IEnumerable<Kategori> GetAll()
+        public async Task<IEnumerable<Kategori>> GetAll()
         {
-            return kategoriDAL.GetAll();
+            return await kategoriDAL.GetAll();
         }
 
-        public Kategori GetById(string id)
+        public async Task<Kategori> GetById(string id)
         {
-            return kategoriDAL.GetById(id);
+            return await kategoriDAL.GetById(id);
         }
 
-        public int Insert(Kategori obj)
+        public async Task<int> Insert(Kategori obj)
         {
             if (obj.NamaKategori == "" || obj.NamaKategori == null)
                 throw new Exception("Nama Kategori harus diisi !");
             try
             {
-                return kategoriDAL.Insert(obj);
+                return await kategoriDAL.Insert(obj);
             }
             catch (Exception ex)
             {
@@ -43,14 +43,14 @@ namespace BL
             }
         }
 
-        public int Update(Kategori obj)
+        public async Task<int> Update(Kategori obj)
         {
             if (obj.NamaKategori == "" || obj.NamaKategori == null)
                 throw new Exception("Nama Kategori harus diisi !");
 
             try
             {
-                return kategoriDAL.Update(obj);
+                return await kategoriDAL.Update(obj);
             }
             catch (Exception ex)
             {
@@ -58,13 +58,13 @@ namespace BL
             }
         }
 
-        public void UpdateMany(List<Kategori> manyKategori)
+        public async Task UpdateMany(List<Kategori> manyKategori)
         {
             try
             {
                 foreach (var kategori in manyKategori)
                 {
-                    kategoriDAL.Update(kategori);
+                    await kategoriDAL.Update(kategori);
                 }
             }
             catch (Exception ex)
@@ -73,15 +73,15 @@ namespace BL
             }
         }
 
-        public int Delete(Kategori obj)
+        public async Task<int> Delete(Kategori obj)
         {
-            Kategori objDel = kategoriDAL.GetById(obj.KategoriID.ToString());
+            Kategori objDel = await kategoriDAL.GetById(obj.KategoriID.ToString());
             if (objDel == null)
                 throw new Exception("Kategori tidak ditemukan");
 
             try
             {
-                int result = kategoriDAL.Delete(obj);
+                int result = await kategoriDAL.Delete(obj);
                 return result;
             }
             catch (Exception ex)
@@ -90,15 +90,15 @@ namespace BL
             }
         }
 
-        public int Delete(string id)
+        public async Task<int> Delete(string id)
         {
-            Kategori objDel = kategoriDAL.GetById(id);
+            Kategori objDel = await kategoriDAL.GetById(id);
             if (objDel == null)
                 throw new Exception("Kategori tidak ditemukan");
 
             try
             {
-                int result = kategoriDAL.Delete(id);
+                int result = await kategoriDAL.Delete(id);
                 return result;
             }
             catch (Exception ex)
@@ -107,13 +107,13 @@ namespace BL
             }
         }
 
-        public void DeleteMany(List<string> ids)
+        public async Task DeleteMany(List<string> ids)
         {
             try
             {
                 foreach(var id in ids)
                 {
-                    kategoriDAL.Delete(id);
+                    await kategoriDAL.Delete(id);
                 }
             }
             catch (Exception ex)

@@ -7,6 +7,7 @@ using System.Web.Http;
 
 using BO;
 using BL;
+using System.Threading.Tasks;
 
 namespace BackendAPI.Controllers
 {
@@ -20,24 +21,24 @@ namespace BackendAPI.Controllers
         }
 
         // GET: api/Kategori
-        public IEnumerable<Kategori> Get()
+        public async Task<IEnumerable<Kategori>> Get()
         {
-            return kategoriBL.GetAll();
+            return await kategoriBL.GetAll();
         }
 
         // GET: api/Kategori/5
-        public Kategori Get(string id)
+        public async Task<Kategori> Get(string id)
         {
-            return kategoriBL.GetById(id);
+            return await kategoriBL.GetById(id);
         }
 
         // POST: api/Kategori
         
-        public IHttpActionResult Post(Kategori kategori)
+        public async Task<IHttpActionResult> Post(Kategori kategori)
         {
             try
             {
-                int result = kategoriBL.Insert(kategori);
+                int result = await kategoriBL.Insert(kategori);
                 return Ok(result.ToString());
             }
             catch (Exception ex)
@@ -47,11 +48,11 @@ namespace BackendAPI.Controllers
         }
 
         // PUT: api/Kategori/5
-        public IHttpActionResult Put(Kategori kategori)
+        public async Task<IHttpActionResult> Put(Kategori kategori)
         {
             try
             {
-                int result = kategoriBL.Update(kategori);
+                int result = await kategoriBL.Update(kategori);
                 return Ok(result.ToString());
             }
             catch (Exception ex)
@@ -62,11 +63,11 @@ namespace BackendAPI.Controllers
 
         [Route("api/Kategori/UpdateMany")]
         [HttpPut]
-        public IHttpActionResult UpdateMany(List<Kategori> listKategori)
+        public async Task<IHttpActionResult> UpdateMany(List<Kategori> listKategori)
         {
             try
             {
-                kategoriBL.UpdateMany(listKategori);
+                await kategoriBL.UpdateMany(listKategori);
                 return Ok();
             }
             catch (Exception ex)
@@ -76,11 +77,11 @@ namespace BackendAPI.Controllers
         }
 
         // DELETE: api/Kategori/5
-        public IHttpActionResult Delete(Kategori kategori)
+        public async Task<IHttpActionResult> Delete(Kategori kategori)
         {
             try
             {
-                int result = kategoriBL.Delete(kategori);
+                int result = await kategoriBL.Delete(kategori);
                 return Ok(result.ToString());
             }
             catch (Exception ex)
@@ -89,11 +90,11 @@ namespace BackendAPI.Controllers
             }
         }
 
-        public IHttpActionResult Delete(string id)
+        public async Task<IHttpActionResult> Delete(string id)
         {
             try
             {
-                int result = kategoriBL.Delete(id);
+                int result = await kategoriBL.Delete(id);
                 return Ok(result.ToString());
             }
             catch (Exception ex)
@@ -104,11 +105,11 @@ namespace BackendAPI.Controllers
 
         [Route("api/Kategori/DeleteMany")]
         [HttpDelete]
-        public IHttpActionResult DeleteMany(List<string> ids)
+        public async Task<IHttpActionResult> DeleteMany(List<string> ids)
         {
             try
             {
-                kategoriBL.DeleteMany(ids);
+                await kategoriBL.DeleteMany(ids);
                 return Ok();
             }
             catch (Exception ex)

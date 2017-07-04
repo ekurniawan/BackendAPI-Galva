@@ -18,7 +18,7 @@ namespace DAL
                 .ConnectionString;
         }
 
-        public int Delete(Kategori obj)
+        public async Task<int> Delete(Kategori obj)
         {
             using (SqlConnection conn = new SqlConnection(GetConnString()))
             {
@@ -28,8 +28,8 @@ namespace DAL
 
                 try
                 {
-                    conn.Open();
-                    int result = cmd.ExecuteNonQuery();
+                    await conn.OpenAsync();
+                    int result = await cmd.ExecuteNonQueryAsync();
                     return result;
                 }
                 catch (SqlException sqlEx)
@@ -44,7 +44,7 @@ namespace DAL
             }
         }
 
-        public int Delete(string id)
+        public async Task<int> Delete(string id)
         {
             using (SqlConnection conn = new SqlConnection(GetConnString()))
             {
@@ -54,8 +54,8 @@ namespace DAL
 
                 try
                 {
-                    conn.Open();
-                    int result = cmd.ExecuteNonQuery();
+                    await conn.OpenAsync();
+                    int result = await cmd.ExecuteNonQueryAsync();
                     return result;
                 }
                 catch (SqlException sqlEx)
@@ -70,7 +70,7 @@ namespace DAL
             }
         }
 
-        public IEnumerable<Kategori> GetAll()
+        public async Task<IEnumerable<Kategori>> GetAll()
         {
             using (SqlConnection conn = new SqlConnection(GetConnString()))
             {
@@ -78,11 +78,11 @@ namespace DAL
                 string strSql = @"select * from Kategori 
                                   order by NamaKategori asc";
                 SqlCommand cmd = new SqlCommand(strSql, conn);
-                conn.Open();
-                SqlDataReader dr = cmd.ExecuteReader();
+                await conn.OpenAsync();
+                SqlDataReader dr = await cmd.ExecuteReaderAsync();
                 if (dr.HasRows)
                 {
-                    while (dr.Read())
+                    while (await dr.ReadAsync())
                     {
                         Kategori kategori = new Kategori
                         {
@@ -101,7 +101,7 @@ namespace DAL
         }
 
         
-        public Kategori GetById(string id)
+        public async Task<Kategori> GetById(string id)
         {
             using (SqlConnection conn = new SqlConnection(GetConnString()))
             {
@@ -112,11 +112,11 @@ namespace DAL
                 SqlCommand cmd = new SqlCommand(strSql, conn);
                 cmd.Parameters.AddWithValue("@KategoriID", id);
 
-                conn.Open();
-                SqlDataReader dr = cmd.ExecuteReader();
+                await conn.OpenAsync();
+                SqlDataReader dr = await cmd.ExecuteReaderAsync();
                 if (dr.HasRows)
                 {
-                    while (dr.Read())
+                    while (await dr.ReadAsync())
                     {
                         kategori = new Kategori()
                         {
@@ -133,7 +133,7 @@ namespace DAL
             }
         }
 
-        public int Insert(Kategori obj)
+        public async Task<int> Insert(Kategori obj)
         {
             using (SqlConnection conn = new SqlConnection(GetConnString()))
             {
@@ -144,8 +144,8 @@ namespace DAL
                 cmd.Parameters.AddWithValue("@NamaKategori", obj.NamaKategori);
                 try
                 {
-                    conn.Open();
-                    result = Convert.ToInt32(cmd.ExecuteScalar());
+                    await conn.OpenAsync();
+                    result = Convert.ToInt32(await cmd.ExecuteScalarAsync());
                     return result;
                 }
                 catch (SqlException sqlEx)
@@ -162,7 +162,7 @@ namespace DAL
         }
 
 
-        public int Update(Kategori obj)
+        public async Task<int> Update(Kategori obj)
         {
             using (SqlConnection conn = new SqlConnection(GetConnString()))
             {
@@ -173,8 +173,8 @@ namespace DAL
                 cmd.Parameters.AddWithValue("@KategoriID", obj.KategoriID);
                 try
                 {
-                    conn.Open();
-                    int result = cmd.ExecuteNonQuery();
+                    await conn.OpenAsync();
+                    int result = await cmd.ExecuteNonQueryAsync();
                     return result;
                 }
                 catch (SqlException sqlEx)

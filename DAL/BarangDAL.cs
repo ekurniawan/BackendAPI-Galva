@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 using System.Data.SqlClient;
 using Dapper;
+using System.Configuration;
 
 namespace DAL
 {
@@ -18,33 +19,43 @@ namespace DAL
                 .ConnectionString;
         }
 
-        public int Delete(Barang obj)
+        public Task<int> Delete(Barang obj)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Barang> GetAll()
+        public async Task<IEnumerable<Barang>> GetAll()
         {
-            using(SqlConnection conn = new SqlConnection(GetConnString()))
+            using (SqlConnection conn = new SqlConnection(GetConnString()))
             {
                 string strSql = @"select * from Barang order by NamaBarang asc";
-                return conn.Query<Barang>(strSql);
+                return await conn.QueryAsync<Barang>(strSql);
             }
         }
 
-        public Barang GetById(string id)
+        public async Task<Barang> GetById(string id)
+        {
+            using (SqlConnection conn = new SqlConnection(GetConnString()))
+            {
+                string strSql = @"select * from Barang where BarangID=@BarangID";
+                var result = await conn.QuerySingleOrDefaultAsync<Barang>(strSql,
+                    new { BarangID = id });
+                return result;
+            }
+        }
+
+        public Task<int> Insert(Barang obj)
         {
             throw new NotImplementedException();
         }
 
-        public int Insert(Barang obj)
+        public Task<int> Update(Barang obj)
         {
             throw new NotImplementedException();
         }
 
-        public int Update(Barang obj)
-        {
-            throw new NotImplementedException();
-        }
+      
+
+       
     }
 }

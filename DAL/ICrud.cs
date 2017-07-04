@@ -8,10 +8,10 @@ namespace DAL
 {
     interface ICrud<T>
     {
-        IEnumerable<T> GetAll();
-        T GetById(string id);
-        int Insert(T obj);
-        int Update(T obj);
-        int Delete(T obj);
+        Task<IEnumerable<T>> GetAll();
+        Task<T> GetById(string id);
+        Task<int> Insert(T obj);
+        Task<int> Update(T obj);
+        Task<int> Delete(T obj);
     }
 }
