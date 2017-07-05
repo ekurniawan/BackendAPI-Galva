@@ -19,9 +19,27 @@ namespace DAL
                 .ConnectionString;
         }
 
-        public Task<int> Delete(Barang obj)
+        public async Task<int> Delete(Barang obj)
         {
-            throw new NotImplementedException();
+            using (SqlConnection conn = new SqlConnection(GetConnString()))
+            {
+                int result = 0;
+                string strSql = "delete from Barang where BarangID=@BarangID";
+                try
+                {
+                    var param = new
+                    {
+                        BarangID = obj.BarangID
+                    };
+                    result = await conn.ExecuteAsync(strSql, param);
+                }
+                catch (SqlException sqlEx)
+                {
+                    throw new Exception("Number:" + sqlEx.Number.ToString() + " " +
+                        sqlEx.Message);
+                }
+                return result;
+            }
         }
 
         public async Task<IEnumerable<Barang>> GetAll()
@@ -71,14 +89,69 @@ namespace DAL
             }
         }
 
-        public Task<int> Insert(Barang obj)
+        public async Task<int> Insert(Barang obj)
         {
-            throw new NotImplementedException();
+            using (SqlConnection conn = new SqlConnection(GetConnString()))
+            {
+                int result=0;
+                string strSql = "insert into Barang(BarangID,KategoriID,NamaBarang,Deskripsi,Stok,HargaBeli,HargaJual,Gambar) " +
+                "values(@BarangID,@KategoriID,@NamaBarang,@Deskripsi,@Stok,@HargaBeli,@HargaJual,@Gambar)";
+                try
+                {
+                    var param = new
+                    {
+                        BarangID = obj.BarangID,
+                        KategoriID = obj.KategoriID,
+                        NamaBarang = obj.NamaBarang,
+                        Deskripsi = obj.Deskripsi,
+                        Stok = obj.Stok,
+                        HargaBeli = obj.HargaBeli,
+                        HargaJual = obj.HargaJual,
+                        Gambar = obj.Gambar
+                    };
+                    result = await conn.ExecuteAsync(strSql,param);
+                }
+                catch (SqlException sqlEx)
+                {
+                    throw new Exception("Number:" + sqlEx.Number.ToString() + " " +
+                        sqlEx.Message);
+                }
+                return result;
+            }
         }
 
-        public Task<int> Update(Barang obj)
+        
+
+        public async Task<int> Update(Barang obj)
         {
-            throw new NotImplementedException();
+            using (SqlConnection conn = new SqlConnection(GetConnString()))
+            {
+                int result = 0;
+                string strSql = @"update Barang set KategoriID=@KategoriID,NamaBarang=@NamaBarang,
+                    Deskripsi=@Deskripsi,Stok=@Stok,HargaBeli=@HargaBeli,
+                    HargaJual=@HargaJual,Gambar=@Gambar where BarangID=@BarangID";
+                try
+                {
+                    var param = new
+                    {
+                        BarangID = obj.BarangID,
+                        KategoriID = obj.KategoriID,
+                        NamaBarang = obj.NamaBarang,
+                        Deskripsi = obj.Deskripsi,
+                        Stok = obj.Stok,
+                        HargaBeli = obj.HargaBeli,
+                        HargaJual = obj.HargaJual,
+                        Gambar = obj.Gambar
+                    };
+                    result = await conn.ExecuteAsync(strSql, param);
+                }
+                catch (SqlException sqlEx)
+                {
+                    throw new Exception("Number:" + sqlEx.Number.ToString() + " " +
+                        sqlEx.Message);
+                }
+                return result;
+            }
         }
 
       

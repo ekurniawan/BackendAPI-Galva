@@ -27,24 +27,51 @@ namespace BackendAPI.Controllers
         }
 
         // GET: api/Barang/5
-        public string Get(int id)
+        public async Task<Barang> Get(string id)
         {
-            return "value";
+            return await barangBL.GetById(id);
         }
 
         // POST: api/Barang
-        public void Post([FromBody]string value)
+        public async Task<IHttpActionResult> Post(Barang barang)
         {
+            int result = await barangBL.Insert(barang);
+            if (result != -1)
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest("Gagal tambah data barang !");
+            }
         }
 
         // PUT: api/Barang/5
-        public void Put(int id, [FromBody]string value)
+        public async Task<IHttpActionResult> Put(Barang barang)
         {
+            int result = await barangBL.Update(barang);
+            if (result != -1)
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest("Gagal update data barang !");
+            }
         }
 
         // DELETE: api/Barang/5
-        public void Delete(int id)
+        public async Task<IHttpActionResult> Delete(Barang barang)
         {
+            int result = await barangBL.Delete(barang);
+            if (result != -1)
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest("Gagal delete data barang !");
+            }
         }
     }
 }

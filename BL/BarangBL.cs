@@ -27,5 +27,25 @@ namespace BL
         {
             return await barangDAL.GetAllWithKategori();
         }
+
+        public async Task<int> Insert(Barang obj)
+        {
+            return await barangDAL.Insert(obj);
+        }
+
+        public async Task<int> Update(Barang obj)
+        {
+            return await barangDAL.Update(obj);
+        }
+
+        public async Task<int> Delete(Barang obj)
+        {
+            return await barangDAL.Delete(obj);
+        }
+
+        public async Task<Barang> GetById(string id)
+        {
+            return await barangDAL.GetById(id);
+        }
     }
 }
