@@ -29,6 +29,8 @@ namespace BL
             return await kategoriDAL.GetById(id);
         }
 
+        
+
         public async Task<int> Insert(Kategori obj)
         {
             if (obj.NamaKategori == "" || obj.NamaKategori == null)

@@ -33,13 +33,40 @@ namespace DAL
             }
         }
 
+        /*public async Task<IEnumerable<ViewBarangWithKategori>> GetAllWithKategori()
+        {
+            using (SqlConnection conn = new SqlConnection(GetConnString()))
+            {
+                string strSql = @"select * from ViewBarangWithKategori order by NamaBarang asc";
+                return await conn.QueryAsync<ViewBarangWithKategori>(strSql);
+            }
+        }*/
+
+        public async Task<IEnumerable<Barang>> GetAllWithKategori()
+        {
+            using (SqlConnection conn = new SqlConnection(GetConnString()))
+            {
+                string strSql = @"SELECT * FROM Barang LEFT JOIN Kategori 
+                                  ON Barang.KategoriID = dbo.Kategori.KategoriID";
+                var results = await conn.QueryAsync<Barang, Kategori, Barang>(strSql,
+                    (b, k) =>
+                    {
+                        b.Kategori = k;
+                        return b;
+                    }, splitOn: "KategoriID");
+
+                return results;
+            }
+        }
+
         public async Task<Barang> GetById(string id)
         {
             using (SqlConnection conn = new SqlConnection(GetConnString()))
             {
                 string strSql = @"select * from Barang where BarangID=@BarangID";
+                var param = new { BarangID = id };
                 var result = await conn.QuerySingleOrDefaultAsync<Barang>(strSql,
-                    new { BarangID = id });
+                    param);
                 return result;
             }
         }
