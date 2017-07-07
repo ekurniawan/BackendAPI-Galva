@@ -12,7 +12,6 @@ using System.Threading.Tasks;
 
 namespace BackendAPI.Controllers
 {
-    [Authorize]
     public class BarangController : ApiController
     {
         private BarangBL barangBL;
@@ -86,12 +85,13 @@ namespace BackendAPI.Controllers
             }
         }
 
-        [Route("PostUserImage")]
+        [Route("api/Barang/PostUserImage")]
         [HttpPost]
-        public IHttpActionResult PostUserImage()
+        public string PostUserImage()
         {
             try
             {
+                var strRndName = "";
                 var httpRequest = HttpContext.Current.Request;
                 foreach (string file in httpRequest.Files)
                 {
@@ -109,30 +109,32 @@ namespace BackendAPI.Controllers
                         if (!AllowedFileExtensions.Contains(extension))
                         {
                             var message = string.Format("Please Upload image of type .jpg,.gif,.png.");
-                            return BadRequest(message);
+                            //return BadRequest(message);
+                            return message;
                         }
                         else if (postedFile.ContentLength > MaxContentLength)
                         {
                             var message = string.Format("Please Upload a file upto 4 mb.");
-                            return BadRequest(message);
+                            return message;
                         }
                         else
                         {
-                            var filePath = HttpContext.Current.Server.MapPath("~/Images/" + postedFile.FileName);
+                            strRndName = Guid.NewGuid().ToString().Substring(0, 10) + DateTime.Now.Ticks.ToString() + postedFile.FileName;
+                            var filePath = HttpContext.Current.Server.MapPath("~/Images/" + strRndName);
                             postedFile.SaveAs(filePath);
                         }
                     }
 
                     var message1 = string.Format("Image Updated Successfully.");
-                    return Ok(message1);
+                    return strRndName;
                 }
                 var res = string.Format("Please Upload a image.");
-                return BadRequest(res);
+                return res;
             }
             catch (Exception ex)
             {
                 var res = string.Format("some Message");
-                return BadRequest("Error " + ex.Message);
+                return res;
             }
         }
     }
