@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web;
 
 using BO;
 using BL;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace BackendAPI.Controllers
 {
+    [Authorize]
     public class BarangController : ApiController
     {
         private BarangBL barangBL;
@@ -21,12 +23,22 @@ namespace BackendAPI.Controllers
         }
 
         // GET: api/Barang
+        /// <summary>
+        /// Ambil semua data Barang
+        /// </summary>
+        /// <returns></returns>
+       
         public async Task<IEnumerable<Barang>> Get()
         {
             return await barangBL.GetAll();
         }
 
         // GET: api/Barang/5
+        /// <summary>
+        /// Ambil data barang berdasarkan id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<Barang> Get(string id)
         {
             return await barangBL.GetById(id);
@@ -71,6 +83,56 @@ namespace BackendAPI.Controllers
             else
             {
                 return BadRequest("Gagal delete data barang !");
+            }
+        }
+
+        [Route("PostUserImage")]
+        [HttpPost]
+        public IHttpActionResult PostUserImage()
+        {
+            try
+            {
+                var httpRequest = HttpContext.Current.Request;
+                foreach (string file in httpRequest.Files)
+                {
+                    HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.Created);
+
+                    var postedFile = httpRequest.Files[file];
+                    if (postedFile != null && postedFile.ContentLength > 0)
+                    {
+
+                        int MaxContentLength = 2048 * 2048 * 1; //Size = 4 MB  
+
+                        IList<string> AllowedFileExtensions = new List<string> { ".jpg", ".gif", ".png" };
+                        var ext = postedFile.FileName.Substring(postedFile.FileName.LastIndexOf('.'));
+                        var extension = ext.ToLower();
+                        if (!AllowedFileExtensions.Contains(extension))
+                        {
+                            var message = string.Format("Please Upload image of type .jpg,.gif,.png.");
+                            return BadRequest(message);
+                        }
+                        else if (postedFile.ContentLength > MaxContentLength)
+                        {
+                            var message = string.Format("Please Upload a file upto 4 mb.");
+                            return BadRequest(message);
+                        }
+                        else
+                        {
+                            var filePath = HttpContext.Current.Server.MapPath("~/Images/" + postedFile.FileName);
+                            postedFile.SaveAs(filePath);
+                        }
+                    }
+
+                    var message1 = string.Format("Image Updated Successfully.");
+                    return Ok(message1);
+                }
+                var res = string.Format("Please Upload a image.");
+                return BadRequest(res);
+            }
+            catch (Exception ex)
+            {
+                var res = string.Format("some Message");
+                return BadRequest("Error " + ex.Message);
             }
         }
     }
